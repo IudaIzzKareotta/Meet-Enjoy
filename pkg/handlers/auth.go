@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"MeetEnjoy"
+	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 )
 
 func (h *Handler) signUp(c *gin.Context) {
-	var user MeetEnjoy.User
+	var user MeetEnjoy2.User
 
 	if err := c.BindJSON(&user); err != nil {
 		return

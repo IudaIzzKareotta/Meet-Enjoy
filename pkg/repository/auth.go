@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"MeetEnjoy"
 	"fmt"
+	MeetEnjoy "github.com/IudaIzzKareotta/Meet-Enjoy"
 	"github.com/jmoiron/sqlx"
 	"log"
 )

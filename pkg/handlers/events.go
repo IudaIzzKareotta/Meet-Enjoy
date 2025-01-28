@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"MeetEnjoy"
+	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -9,7 +9,7 @@ import (
 )
 
 func (h *Handler) createEvent(c *gin.Context) {
-	var event MeetEnjoy.Event
+	var event MeetEnjoy2.Event
 	if err := c.BindJSON(&event); err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, "Error parsing event json")
@@ -84,7 +84,7 @@ func (h *Handler) getEventById(c *gin.Context) {
 }
 
 func (h *Handler) updateEvent(c *gin.Context) {
-	var updateInput MeetEnjoy.UpdateEventInput
+	var updateInput MeetEnjoy2.UpdateEventInput
 	if err := c.BindJSON(&updateInput); err != nil {
 		c.JSON(http.StatusBadRequest, "Error parsing update event")
 		return

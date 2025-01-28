@@ -1,11 +1,11 @@
 package main
 
 import (
-	"MeetEnjoy"
-	"MeetEnjoy/pkg/handlers"
-	"MeetEnjoy/pkg/repository"
-	"MeetEnjoy/pkg/service"
 	"context"
+	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
+	"github.com/IudaIzzKareotta/Meet-Enjoy/pkg/handlers"
+	repository2 "github.com/IudaIzzKareotta/Meet-Enjoy/pkg/repository"
+	service2 "github.com/IudaIzzKareotta/Meet-Enjoy/pkg/service"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
@@ -24,7 +24,7 @@ func main() {
 		log.Fatalf("Error loading .env file: %s", err)
 	}
 
-	db, err := repository.NewPostgresDb(repository.Config{
+	db, err := repository2.NewPostgresDb(repository2.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
 		Username: viper.GetString("db.username"),
@@ -36,11 +36,11 @@ func main() {
 		log.Fatalf("Error connecting to database: %s", err)
 	}
 
-	repos := repository.NewRepository(db)
-	services := service.NewService(repos)
+	repos := repository2.NewRepository(db)
+	services := service2.NewService(repos)
 	handler := handlers.NewHandler(services)
 
-	srv := new(MeetEnjoy.Server)
+	srv := new(MeetEnjoy2.Server)
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handler.InitRoutes()); err != nil {
 			log.Fatalf("Error starting server: %s", err)

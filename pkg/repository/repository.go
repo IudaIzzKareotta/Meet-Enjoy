@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"MeetEnjoy"
+	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
 	"github.com/jmoiron/sqlx"
 	"os"
 )
@@ -13,16 +13,16 @@ var (
 )
 
 type Authorization interface {
-	CreateUser(user MeetEnjoy.User) (int, error)
-	GetUser(username, password string) (MeetEnjoy.User, error)
+	CreateUser(user MeetEnjoy2.User) (int, error)
+	GetUser(username, password string) (MeetEnjoy2.User, error)
 }
 
 type Event interface {
-	CreateEvent(event MeetEnjoy.Event, userId int) (int, error)
-	GetUserEvents(userId int) ([]MeetEnjoy.Event, error)
-	GetEventParticipants(eventId int) ([]MeetEnjoy.Participants, error)
-	GetEventById(eventId int) (MeetEnjoy.Event, error)
-	UpdateEvent(eventId int, updateInput MeetEnjoy.UpdateEventInput) error
+	CreateEvent(event MeetEnjoy2.Event, userId int) (int, error)
+	GetUserEvents(userId int) ([]MeetEnjoy2.Event, error)
+	GetEventParticipants(eventId int) ([]MeetEnjoy2.Participants, error)
+	GetEventById(eventId int) (MeetEnjoy2.Event, error)
+	UpdateEvent(eventId int, updateInput MeetEnjoy2.UpdateEventInput) error
 	DeleteEvent(eventId int, userId int) error
 }
 

@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"MeetEnjoy"
 	"fmt"
+	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
 	"github.com/jmoiron/sqlx"
 	"strings"
 	"time"
@@ -12,7 +12,7 @@ type EventPostgres struct {
 	db *sqlx.DB
 }
 
-func (ep EventPostgres) CreateEvent(event MeetEnjoy.Event, userId int) (int, error) {
+func (ep EventPostgres) CreateEvent(event MeetEnjoy2.Event, userId int) (int, error) {
 	var eventId int
 
 	tx, err := ep.db.Begin()
@@ -44,8 +44,8 @@ func (ep EventPostgres) CreateEvent(event MeetEnjoy.Event, userId int) (int, err
 	return eventId, nil
 }
 
-func (ep EventPostgres) GetUserEvents(userId int) ([]MeetEnjoy.Event, error) {
-	var events []MeetEnjoy.Event
+func (ep EventPostgres) GetUserEvents(userId int) ([]MeetEnjoy2.Event, error) {
+	var events []MeetEnjoy2.Event
 
 	query := "SELECT title, content, photo_url, event_date, created_at, updated_at FROM events WHERE author_id = $1"
 	err := ep.db.Select(&events, query, userId)
@@ -56,8 +56,8 @@ func (ep EventPostgres) GetUserEvents(userId int) ([]MeetEnjoy.Event, error) {
 	return events, nil
 }
 
-func (ep EventPostgres) GetEventParticipants(eventId int) ([]MeetEnjoy.Participants, error) {
-	var participants []MeetEnjoy.Participants
+func (ep EventPostgres) GetEventParticipants(eventId int) ([]MeetEnjoy2.Participants, error) {
+	var participants []MeetEnjoy2.Participants
 	query := "SELECT user_id, event_id, current_status, status_updated_at FROM participants WHERE event_id = $1"
 
 	err := ep.db.Select(&participants, query, eventId)
@@ -68,8 +68,8 @@ func (ep EventPostgres) GetEventParticipants(eventId int) ([]MeetEnjoy.Participa
 	return participants, nil
 }
 
-func (ep EventPostgres) GetEventById(eventId int) (MeetEnjoy.Event, error) {
-	var event MeetEnjoy.Event
+func (ep EventPostgres) GetEventById(eventId int) (MeetEnjoy2.Event, error) {
+	var event MeetEnjoy2.Event
 	query := "SELECT * FROM events WHERE id = $1"
 	err := ep.db.Get(&event, query, eventId)
 	if err != nil {
@@ -78,7 +78,7 @@ func (ep EventPostgres) GetEventById(eventId int) (MeetEnjoy.Event, error) {
 	return event, nil
 }
 
-func (ep EventPostgres) UpdateEvent(eventId int, updateInput MeetEnjoy.UpdateEventInput) error {
+func (ep EventPostgres) UpdateEvent(eventId int, updateInput MeetEnjoy2.UpdateEventInput) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argId := 1

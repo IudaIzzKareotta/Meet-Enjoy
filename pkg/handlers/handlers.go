@@ -1,15 +1,15 @@
 package handlers
 
 import (
-	"MeetEnjoy/pkg/service"
+	service2 "github.com/IudaIzzKareotta/Meet-Enjoy/pkg/service"
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	services *service.Service
+	services *service2.Service
 }
 
-func NewHandler(services *service.Service) *Handler {
+func NewHandler(services *service2.Service) *Handler {
 	return &Handler{services: services}
 }
 
@@ -33,7 +33,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	participants := router.Group("/participants", h.userIdentity)
 	{
 		participants.GET("/:eventId", h.getEventParticipants)
-		participants.GET("/", h.)
+		participants.GET("/")
 	}
 
 	return router

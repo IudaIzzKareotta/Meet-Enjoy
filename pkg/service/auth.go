@@ -1,11 +1,11 @@
 package service
 
 import (
-	"MeetEnjoy"
-	"MeetEnjoy/pkg/repository"
 	"crypto/sha1"
 	"errors"
 	"fmt"
+	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
+	repository2 "github.com/IudaIzzKareotta/Meet-Enjoy/pkg/repository"
 	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"os"
@@ -15,7 +15,7 @@ import (
 const TokenTTL = 12 * time.Hour
 
 type AuthService struct {
-	repos repository.Authorization
+	repos repository2.Authorization
 }
 
 type CustomClaims struct {
@@ -23,11 +23,11 @@ type CustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func NewAuthService(repos repository.Authorization) *AuthService {
+func NewAuthService(repos repository2.Authorization) *AuthService {
 	return &AuthService{repos: repos}
 }
 
-func (as *AuthService) CreateUser(user MeetEnjoy.User) (int, error) {
+func (as *AuthService) CreateUser(user MeetEnjoy2.User) (int, error) {
 	user.Password = generatePasswordHash(user.Password)
 	return as.repos.CreateUser(user)
 }
