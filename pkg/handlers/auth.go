@@ -3,7 +3,7 @@ package handlers
 import (
 	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
 	"github.com/gin-gonic/gin"
-	"log"
+	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -11,17 +11,20 @@ func (h *Handler) signUp(c *gin.Context) {
 	var user MeetEnjoy2.User
 
 	if err := c.BindJSON(&user); err != nil {
+		logrus.Errorf("Error parsing json %s:", err)
 		return
 	}
 
 	id, err := h.services.Authorization.CreateUser(user)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, "Error creating user")
+		logrus.Errorf("Error creating user %s:", err)
+		return
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
+
 }
 
 type signInInput struct {
@@ -33,13 +36,13 @@ func (h *Handler) signIn(c *gin.Context) {
 	var input signInInput
 
 	if err := c.BindJSON(&input); err != nil {
-		log.Print("err1")
+		logrus.Errorf("Error parsing json %s:", err)
 		return
 	}
 
 	token, err := h.services.Authorization.GenerateToken(input.Username, input.Password)
 	if err != nil {
-		log.Print("err2")
+		logrus.Errorf("Error generating token %s:", err)
 		return
 	}
 

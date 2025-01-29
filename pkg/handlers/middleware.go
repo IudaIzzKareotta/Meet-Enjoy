@@ -3,9 +3,11 @@ package handlers
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 const (
@@ -52,4 +54,19 @@ func getUserId(c *gin.Context) (int, error) {
 	}
 
 	return idInt, nil
+}
+
+func loggerMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		c.Next()
+
+		logrus.WithFields(logrus.Fields{
+			"method":  c.Request.Method,
+			"path":    c.Request.URL.Path,
+			"status":  c.Writer.Status(),
+			"latency": time.Since(start),
+			"error":   c.Errors.ByType(gin.ErrorTypePrivate).String(),
+		}).Info("handler request")
+	}
 }

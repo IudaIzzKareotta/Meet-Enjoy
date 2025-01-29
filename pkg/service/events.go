@@ -16,9 +16,7 @@ func (es EventService) CreateEvent(event MeetEnjoy2.Event, userId int) (int, err
 func (es EventService) GetUserEvents(userId int) ([]MeetEnjoy2.Event, error) {
 	return es.repos.GetUserEvents(userId)
 }
-func (es EventService) GetEventParticipants(eventId int) ([]MeetEnjoy2.Participants, error) {
-	return es.repos.GetEventParticipants(eventId)
-}
+
 func (es EventService) GetEventById(eventId int) (MeetEnjoy2.Event, error) {
 	return es.repos.GetEventById(eventId)
 }

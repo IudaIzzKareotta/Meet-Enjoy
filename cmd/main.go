@@ -8,8 +8,8 @@ import (
 	service2 "github.com/IudaIzzKareotta/Meet-Enjoy/pkg/service"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,12 +17,15 @@ import (
 
 func main() {
 	if err := initConfig(); err != nil {
-		log.Fatalf("Error initializing config: %s", err)
+		logrus.Fatalf("Error initializing config: %s", err)
 	}
 
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
+		logrus.Fatalf("Error loading .env file: %s", err)
 	}
+
+	logrus.SetFormatter(&logrus.JSONFormatter{})
+	logrus.SetLevel(logrus.InfoLevel)
 
 	db, err := repository2.NewPostgresDb(repository2.Config{
 		Host:     viper.GetString("db.host"),
@@ -33,7 +36,7 @@ func main() {
 		Password: os.Getenv("DB_PASSWORD"),
 	})
 	if err != nil {
-		log.Fatalf("Error connecting to database: %s", err)
+		logrus.Fatalf("Error connecting to database: %s", err)
 	}
 
 	repos := repository2.NewRepository(db)
@@ -43,7 +46,7 @@ func main() {
 	srv := new(MeetEnjoy2.Server)
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handler.InitRoutes()); err != nil {
-			log.Fatalf("Error starting server: %s", err)
+			logrus.Fatalf("Error starting server: %s", err)
 		}
 	}()
 
@@ -52,7 +55,7 @@ func main() {
 	<-quit
 
 	if err := srv.ShutDown(context.Background()); err != nil {
-		log.Printf("error occured on server shutting down: %s", err.Error())
+		logrus.Printf("error occured on server shutting down: %s", err.Error())
 	}
 
 }

@@ -27,3 +27,10 @@ type UpdateEventInput struct {
 	PhotoUrl  string `json:"photo_url"`
 	EventDate string `json:"event_date"`
 }
+
+type Invite struct {
+	Id        uint      `json:"id"`
+	EventId   int       `json:"event_id"`
+	Token     string    `json:"token"`
+	CreatedAt time.Time `json:"created_at"`
+}

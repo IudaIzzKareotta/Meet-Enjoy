@@ -1,4 +1,4 @@
-CREATE TABLE users
+                                                                                                                                                                                                                           CREATE TABLE users
 (
     id            serial       PRIMARY KEY,
     username      varchar(255) NOT NULL UNIQUE,
@@ -32,4 +32,14 @@ CREATE TABLE participants
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT fk_event FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, event_id)
+);
+
+CREATE TABLE invites
+(
+    id serial primary key ,
+    event_id integer not null ,
+    token varchar unique not null,
+    created_at timestamp not null default current_timestamp,
+    expires_at timestamp not null,
+    constraint fk_event foreign key (event_id) references events (id) on delete cascade
 );

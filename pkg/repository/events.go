@@ -4,6 +4,7 @@ import (
 	"fmt"
 	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
 	"github.com/jmoiron/sqlx"
+	"github.com/sirupsen/logrus"
 	"strings"
 	"time"
 )
@@ -54,18 +55,6 @@ func (ep EventPostgres) GetUserEvents(userId int) ([]MeetEnjoy2.Event, error) {
 	}
 
 	return events, nil
-}
-
-func (ep EventPostgres) GetEventParticipants(eventId int) ([]MeetEnjoy2.Participants, error) {
-	var participants []MeetEnjoy2.Participants
-	query := "SELECT user_id, event_id, current_status, status_updated_at FROM participants WHERE event_id = $1"
-
-	err := ep.db.Select(&participants, query, eventId)
-	if err != nil {
-		return nil, fmt.Errorf("failed to execute query: %w", err)
-	}
-
-	return participants, nil
 }
 
 func (ep EventPostgres) GetEventById(eventId int) (MeetEnjoy2.Event, error) {
@@ -125,6 +114,7 @@ func (ep EventPostgres) DeleteEvent(eventId int, userId int) error {
 	query := `DELETE FROM events WHERE id = $1 AND author_id = $2`
 	_, err := ep.db.Exec(query, eventId, userId)
 	if err != nil {
+		logrus.Errorf("Failed to execute query :%w", err)
 		return err
 	}
 

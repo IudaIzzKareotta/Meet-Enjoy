@@ -3,6 +3,7 @@ package handlers
 import (
 	MeetEnjoy2 "github.com/IudaIzzKareotta/Meet-Enjoy"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,20 +12,19 @@ import (
 func (h *Handler) createEvent(c *gin.Context) {
 	var event MeetEnjoy2.Event
 	if err := c.BindJSON(&event); err != nil {
-		log.Println(err)
-		c.JSON(http.StatusBadRequest, "Error parsing event json")
+		logrus.Errorf("Error parsing json %s:", err)
 		return
 	}
 
 	userId, err := getUserId(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Error getting user id")
+		logrus.Errorf("Error getting user id %s:", err)
 		return
 	}
 
 	id, err := h.services.Events.CreateEvent(event, userId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Error creating event")
+		logrus.Errorf("Error creating event %s:", err)
 		return
 	}
 
@@ -36,38 +36,21 @@ func (h *Handler) createEvent(c *gin.Context) {
 func (h *Handler) getUserEvents(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Error getting user id")
+		logrus.Errorf("Error getting user events %s:", err)
 		return
 	}
 
 	events, err := h.services.GetUserEvents(userId)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Error getting user events")
+		logrus.Errorf("Error creating event %s:", err)
 		return
 	}
 
 	c.JSON(http.StatusOK, events)
 }
 
-func (h *Handler) getEventParticipants(c *gin.Context) {
-	eventId, err := strconv.Atoi(c.Param("eventId"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, "Error parsing eventId")
-		return
-	}
-
-	participants, err := h.services.GetEventParticipants(eventId)
-	if err != nil {
-		log.Println(err)
-		c.JSON(http.StatusInternalServerError, "Error getting user events")
-		return
-	}
-
-	c.JSON(http.StatusOK, participants)
-}
-
 func (h *Handler) getEventById(c *gin.Context) {
-	eventId, err := strconv.Atoi(c.Param("eventId"))
+	eventId, err := strconv.Atoi(c.Param("event_id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, "Error parsing eventId")
 		return
@@ -90,14 +73,14 @@ func (h *Handler) updateEvent(c *gin.Context) {
 		return
 	}
 
-	eventId, err := strconv.Atoi(c.Param("eventId"))
+	eventId, err := strconv.Atoi(c.Param("event_id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Error parsing eventId")
+		logrus.Errorf("Error parsing eventId  %s:", err)
 		return
 	}
 
 	if err := h.services.Events.UpdateEvent(eventId, updateInput); err != nil {
-		c.JSON(http.StatusInternalServerError, "Error updating event")
+		logrus.Errorf("Error updating event %s:", err)
 		return
 	}
 
@@ -105,21 +88,23 @@ func (h *Handler) updateEvent(c *gin.Context) {
 }
 
 func (h *Handler) deleteEvent(c *gin.Context) {
-	eventId, err := strconv.Atoi(c.Param("eventId"))
+	eventId, err := strconv.Atoi(c.Param("event_id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Error parsing eventId")
+		logrus.Errorf("Error parsing eventId %s:", err)
 		return
 	}
 
 	userId, err := getUserId(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Error getting user id")
+		logrus.Errorf("Error getting user id %s:", err)
 		return
 	}
 
 	if err := h.services.Events.DeleteEvent(eventId, userId); err != nil {
 		log.Println(err)
-		c.JSON(http.StatusInternalServerError, "Error deleting event")
+		logrus.Errorf("Error deleting event %s:", err)
 		return
 	}
+
+	c.Status(http.StatusOK)
 }

@@ -20,20 +20,26 @@ type Authorization interface {
 type Event interface {
 	CreateEvent(event MeetEnjoy2.Event, userId int) (int, error)
 	GetUserEvents(userId int) ([]MeetEnjoy2.Event, error)
-	GetEventParticipants(eventId int) ([]MeetEnjoy2.Participants, error)
 	GetEventById(eventId int) (MeetEnjoy2.Event, error)
 	UpdateEvent(eventId int, updateInput MeetEnjoy2.UpdateEventInput) error
 	DeleteEvent(eventId int, userId int) error
 }
 
+type Participants interface {
+	GetEventParticipants(eventId int) ([]MeetEnjoy2.Participants, error)
+	DeleteParticipant(userId int, eventId int, participantId int) error
+}
+
 type Repository struct {
 	Authorization
 	Event
+	Participants
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
 		Event:         NewEventPostgres(db),
+		Participants:  NewParticipantsPostgres(db),
 	}
 }
